@@ -30,7 +30,7 @@ pipeline {
             }
         }
 
-        Stage('CLoudfront invalidation'){
+        stage('CLoudfront invalidation'){
             steps{
                 sh 'aws cloudfront create-invalidation --distribution-id E3H0WXL8GOO1H9 --paths "/**/*"'
             }
