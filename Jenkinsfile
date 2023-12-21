@@ -12,8 +12,8 @@ pipeline {
         
         stage('ci'){
             steps{
-                // sh 'node -v'
-                // sh 'yarn -v'
+                sh 'node -v'
+                sh 'yarn -v'
                 sh 'cp .env.example .env'
                 sh 'yarn --force'
                 sh 'yarn run build'
