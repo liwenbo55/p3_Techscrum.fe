@@ -32,7 +32,9 @@ pipeline {
 
         stage('CLoudfront invalidation'){
             steps{
-                sh 'aws cloudfront create-invalidation --distribution-id E3H0WXL8GOO1H9 --paths "/**/*"'
+                withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
+                    sh 'aws cloudfront create-invalidation --distribution-id E3H0WXL8GOO1H9 --paths "/**/*"'
+                }
             }
         }
     }
