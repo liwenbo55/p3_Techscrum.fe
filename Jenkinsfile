@@ -29,6 +29,7 @@ pipeline {
                   }
             }
         }
+    }
         
     post {
         success {
@@ -48,6 +49,5 @@ pipeline {
                 attachLog: true
             )
         }
-    }
     }
 }
