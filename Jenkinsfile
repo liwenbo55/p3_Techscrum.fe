@@ -23,10 +23,16 @@ pipeline {
         stage('Deploy to AWS'){
             steps {
                   withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
-                      // sh 'echo "Uploading artifacts with AWS creds"'
-                      sh 'aws s3 sync ./build s3://p3.techscrum-uat.wenboli.xyz-frontend-uat'
                       s3Upload(file:'./build', bucket:'p3.techscrum-uat.wenboli.xyz-frontend-uat')
+                      // sh 'aws s3 sync ./build s3://p3.techscrum-uat.wenboli.xyz-frontend-uat'
+                      // Either is OK to upload artifacts to S3 bucket
                   }
+            }
+        }
+
+        Stage('CLoudfront invalidation'){
+            steps{
+                sh 'aws cloudfront create-invalidation --distribution-id E3H0WXL8GOO1H9 --paths "/**/*"'
             }
         }
     }
