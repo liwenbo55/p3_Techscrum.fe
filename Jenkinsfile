@@ -12,16 +12,16 @@ pipeline {
         
         stage('ci'){
             steps{
-                // sh 'node -v'
-                // sh 'yarn -v'
-                // sh 'cp .env.example .env'
-                // sh 'yarn --force'
-                // sh 'yarn run build'
                 sh 'node -v'
-                sh 'npm -v'
-                sh 'npm install --force'
+                sh 'yarn -v'
                 sh 'cp .env.example .env'
-                sh 'npm run build'
+                sh 'yarn --force'
+                sh 'yarn run build'
+                // sh 'node -v'
+                // sh 'npm -v'
+                // sh 'npm install --force'
+                // sh 'cp .env.example .env'
+                // sh 'npm run build'
             }
         }
 
