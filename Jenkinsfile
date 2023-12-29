@@ -14,7 +14,7 @@ pipeline {
             steps{
                 sh 'node -v'
                 sh 'yarn -v'
-                sh 'cp .env.example .env'
+                // sh 'cp .env.example .env'
                 sh 'yarn --force'
                 sh 'yarn run build'
                 // sh 'node -v'
