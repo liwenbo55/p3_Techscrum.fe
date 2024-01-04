@@ -53,9 +53,13 @@ pipeline {
         stage('Deploy to AWS'){
             steps {
                   withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
-                      s3Upload(file:'./build', bucket:'p3.techscrum-${params.Environment}.wenboli.xyz-frontend-${params.Environment}')
-                      // sh 'aws s3 sync ./build s3://p3.techscrum-uat.wenboli.xyz-frontend-uat'
+                      // s3Upload(file:'./build', bucket:'p3.techscrum-uat.wenboli.xyz-frontend-uat')
+                      sh 'aws s3 sync ./build s3://p3.techscrum-${params.Environment}.wenboli.xyz-frontend-${params.Environment}'
                       // Either is OK to upload artifacts to S3 bucket
+
+                      // CLoudfront invalidation
+                      sh 'aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/**/*"'
+
                   }
             }
         }
@@ -67,9 +71,14 @@ pipeline {
                 }
             }
         }
+        
     }
         
     post {
+        always {
+            // 
+            echo "Frontend URL: ${params.Environment}.wenboli.xyz"
+        }
         success {
             emailext(
                 to: "lawrence.wenboli@gmail.com",
