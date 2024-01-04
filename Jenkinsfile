@@ -8,7 +8,9 @@ pipeline {
     }
     
     environment {
-        DISTRIBUTION_ID = "E14LUFS4II79ZY"
+        DEV_DISTRIBUTION_ID  = ""
+        UAT_DISTRIBUTION_ID  = "E14LUFS4II79ZY"
+        PROD_DISTRIBUTION_ID = ""
         S3_BUCKET = "p3.techscrum-${params.Environment}.wenboli.xyz-frontend-${params.Environment}"
     }
     
@@ -55,26 +57,23 @@ pipeline {
         stage('cd'){
             steps {
                   withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
-                      
                       // s3Upload(file:'./build', bucket:'p3.techscrum-uat.wenboli.xyz-frontend-uat')
                       sh 'aws s3 sync ./build s3://${S3_BUCKET}'
-
                       // Either is OK to upload artifacts to S3 bucket
 
                       // CLoudfront invalidation
-                      sh 'aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/**/*"'
+                      if (params.Environment == 'dev'){
+                          sh 'aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths "/**/*"'
+                      } else if (params.Environment == 'uat'){
+                          sh 'aws cloudfront create-invalidation --distribution-id ${UAT_DISTRIBUTION_ID} --paths "/**/*"'
+                      } else if (params.Environment == 'prod'){
+                          sh 'aws cloudfront create-invalidation --distribution-id ${PROD_DISTRIBUTION_ID} --paths "/**/*"'
+                      } else {
+                          error "Invalid environment: ${params.Environment}."
+                      }
                   }
             }
         }
-
-        // stage('CLoudfront invalidation'){
-        //     steps{
-        //         withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
-        //             sh 'aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/**/*"'
-        //         }
-        //     }
-        // }
-        
     }
         
     post {
