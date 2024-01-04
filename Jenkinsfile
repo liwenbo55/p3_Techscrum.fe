@@ -1,15 +1,17 @@
 // Jenkinsfile for Techscrum project (by Lawrence)
 pipeline {
     agent any
-    
-    environment {
-        DISTRIBUTION_ID = "E14LUFS4II79ZY"
-    }
-    
+
     parameters {
         // Choose an environment to deploy frond-end.
         choice(choices: ['dev', 'uat', 'prod'], name: 'Environment', description: 'Please choose an environment to deploy frond-end.')
     }
+    
+    environment {
+        DISTRIBUTION_ID = "E14LUFS4II79ZY"
+        S3_BUCKET = "p3.techscrum-${params.Environment}.wenboli.xyz-frontend-${params.Environment}"
+    }
+    
 
     stages {
         stage('Git checkout') {
@@ -53,8 +55,10 @@ pipeline {
         stage('cd'){
             steps {
                   withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
+                      
                       // s3Upload(file:'./build', bucket:'p3.techscrum-uat.wenboli.xyz-frontend-uat')
-                      sh 'aws s3 sync ./build s3://p3.techscrum-${params.Environment}.wenboli.xyz-frontend-${params.Environment}'
+                      sh 'aws s3 sync ./build s3://${S3_BUCKET}'
+
                       // Either is OK to upload artifacts to S3 bucket
 
                       // CLoudfront invalidation
