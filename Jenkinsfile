@@ -50,7 +50,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to AWS'){
+        stage('cd'){
             steps {
                   withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
                       // s3Upload(file:'./build', bucket:'p3.techscrum-uat.wenboli.xyz-frontend-uat')
@@ -59,24 +59,22 @@ pipeline {
 
                       // CLoudfront invalidation
                       sh 'aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/**/*"'
-
                   }
             }
         }
 
-        stage('CLoudfront invalidation'){
-            steps{
-                withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
-                    sh 'aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/**/*"'
-                }
-            }
-        }
+        // stage('CLoudfront invalidation'){
+        //     steps{
+        //         withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
+        //             sh 'aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/**/*"'
+        //         }
+        //     }
+        // }
         
     }
         
     post {
         always {
-            // 
             echo "Frontend URL: ${params.Environment}.wenboli.xyz"
         }
         success {
