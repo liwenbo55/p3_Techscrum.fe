@@ -21,26 +21,27 @@ pipeline {
         
         stage('ci'){
             steps{
-                // Show version
-                sh 'node -v'
-                sh 'yarn -v'
+                script{
+                    // Show version
+                    sh 'node -v'
+                    sh 'yarn -v'
 
-                // .env file
-                if (params.Environment == 'dev'){
-                    sh 'cp .env.dev .env'
-                } else if (params.Environment == 'uat'){
-                    sh 'cp .env.uat .env'
-                } else if (params.Environment == 'prod'){
-                    sh 'cp .env.prod .env'
-                } else {
-                    error "Invalid environment: ${params.Environment}."
+                    // .env file
+                    if (params.Environment == 'dev'){
+                        sh 'cp .env.dev .env'
+                    } else if (params.Environment == 'uat'){
+                        sh 'cp .env.uat .env'
+                    } else if (params.Environment == 'prod'){
+                        sh 'cp .env.prod .env'
+                    } else {
+                        error "Invalid environment: ${params.Environment}."
+                    }
+                    sh "cat .env"
+
+                    // build
+                    sh 'yarn --force'
+                    sh 'yarn run build'
                 }
-                sh "cat .env"
-
-                // build
-                sh 'yarn --force'
-                sh 'yarn run build'
-
                 // sh 'node -v'
                 // sh 'npm -v'
                 // sh 'npm install --force'
