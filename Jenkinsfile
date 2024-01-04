@@ -77,10 +77,8 @@ pipeline {
     }
         
     post {
-        always {
-            echo "Frontend URL: ${params.Environment}.wenboli.xyz"
-        }
         success {
+            echo "Frontend URL: ${params.Environment}.wenboli.xyz"
             emailext(
                 to: "lawrence.wenboli@gmail.com",
                 subject: "Front-end cicd pipeline for ${params.Environment} environment succeeded.",
