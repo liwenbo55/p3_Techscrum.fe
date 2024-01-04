@@ -32,6 +32,8 @@ pipeline {
                     sh 'cp .env.uat .env'
                 } else if (params.Environment == 'prod'){
                     sh 'cp .env.prod .env'
+                } else {
+                    error "Invalid environment: ${params.Environment}."
                 }
                 sh "cat .env"
 
