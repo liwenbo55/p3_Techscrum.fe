@@ -92,7 +92,7 @@ pipeline {
             emailext(
                 to: "lawrence.wenboli@gmail.com",
                 subject: "Front-end cicd pipeline for ${params.Environment} environment failed.",
-                body: "Jenkins Pipeline failed，please check logfile for more details.",
+                body: "Jenkins Pipeline failed, please check logfile for more details.",
                 attachLog: true
             )
         }
