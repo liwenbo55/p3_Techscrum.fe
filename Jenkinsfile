@@ -78,11 +78,11 @@ pipeline {
         
     post {
         success {
-            echo "Frontend URL: ${params.Environment}..xyz"
+            echo "Front-end URL: ${params.Environment}.${HOSTED_ZONE_NAME}"
             emailext(
                 to: "lawrence.wenboli@gmail.com",
-                subject: "Front-end cicd pipeline for ${params.Environment} environment succeeded.",
-                body: "Jenkins Pipeline succeeded.\nEnvironment: ${params.Environment}.",
+                subject: "Front-end CICD pipeline (${params.Environment} environment) succeeded.",
+                body: "Jenkins CICD Pipeline succeeded.\nEnvironment: ${params.Environment}.",
                 attachLog: false
             )
         }
@@ -90,8 +90,8 @@ pipeline {
         failure {
             emailext(
                 to: "lawrence.wenboli@gmail.com",
-                subject: "Front-end cicd pipeline for ${params.Environment} environment failed.",
-                body: "Jenkins Pipeline failed, please check logfile for more details.",
+                subject: "Front-end CICD pipeline (${params.Environment} environment) failed.",
+                body: "Jenkins CICD Pipeline failed, please check logfile for more details.",
                 attachLog: true
             )
         }
