@@ -8,10 +8,12 @@ pipeline {
     }
     
     environment {
-        DEV_DISTRIBUTION_ID  = ""
-        UAT_DISTRIBUTION_ID  = "E14LUFS4II79ZY"
-        PROD_DISTRIBUTION_ID = ""
-        S3_BUCKET = "p3.techscrum-${params.Environment}.wenboli.xyz-frontend-${params.Environment}"
+        DEV_DISTRIBUTION_ID  = credentials('DEV_DISTRIBUTION_ID')
+        UAT_DISTRIBUTION_ID  = credentials('UAT_DISTRIBUTION_ID')
+        PROD_DISTRIBUTION_ID = credentials('PROD_DISTRIBUTION_ID')
+        // HOSTED_ZONE_NAME = "wenboli.xyz"
+        HOSTED_ZONE_NAME = credentials('HOSTED_ZONE_NAME')
+        S3_BUCKET = "p3.techscrum-${params.Environment}.${HOSTED_ZONE_NAME}-frontend-${params.Environment}"
     }
     
 
@@ -26,6 +28,7 @@ pipeline {
         stage('ci'){
             steps{
                 script{
+                    sh "echo 'test test test.....'"
                     // Show version
                     sh 'node -v'
                     sh 'yarn -v'
@@ -46,18 +49,14 @@ pipeline {
                     sh 'yarn --force'
                     sh 'yarn run build'
                 }
-                // sh 'node -v'
-                // sh 'npm -v'
-                // sh 'npm install --force'
-                // sh 'cp .env.example .env'
-                // sh 'npm run build'
             }
         }
 
         stage('cd'){
             steps {
-                  withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
-                      // s3Upload(file:'./build', bucket:'p3.techscrum-uat.wenboli.xyz-frontend-uat')
+                script{
+                    withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
+                     // s3Upload(file:'./build', bucket:'p3.techscrum-uat..xyz-frontend-uat')
                       sh 'aws s3 sync ./build s3://${S3_BUCKET}'
                       // Either is OK to upload artifacts to S3 bucket
 
@@ -71,14 +70,15 @@ pipeline {
                       } else {
                           error "Invalid environment: ${params.Environment}."
                       }
-                  }
+                    }
+                }
             }
         }
     }
         
     post {
         success {
-            echo "Frontend URL: ${params.Environment}.wenboli.xyz"
+            echo "Frontend URL: ${params.Environment}..xyz"
             emailext(
                 to: "lawrence.wenboli@gmail.com",
                 subject: "Front-end cicd pipeline for ${params.Environment} environment succeeded.",
