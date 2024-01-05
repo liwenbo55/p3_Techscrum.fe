@@ -26,7 +26,7 @@ pipeline {
         stage('ci'){
             steps{
                 script{
-                    sh 'test test test.....'
+                    sh "echo 'test test test.....'"
                     // Show version
                     sh 'node -v'
                     sh 'yarn -v'
