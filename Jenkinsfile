@@ -9,7 +9,7 @@ pipeline {
     
     environment {
         DEV_DISTRIBUTION_ID  = ""
-        UAT_DISTRIBUTION_ID  = credentials('UAT_DISTRIBUTION_ID')
+        // UAT_DISTRIBUTION_ID  = credentials('UAT_DISTRIBUTION_ID')
         PROD_DISTRIBUTION_ID = ""
         S3_BUCKET = "p3.techscrum-${params.Environment}.wenboli.xyz-frontend-${params.Environment}"
     }
