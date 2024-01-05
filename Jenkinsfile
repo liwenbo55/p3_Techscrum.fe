@@ -9,7 +9,7 @@ pipeline {
     
     environment {
         DEV_DISTRIBUTION_ID  = ""
-        // UAT_DISTRIBUTION_ID  = credentials('UAT_DISTRIBUTION_ID')
+        UAT_DISTRIBUTION_ID  = credentials('UAT_DISTRIBUTION_ID')
         PROD_DISTRIBUTION_ID = ""
         S3_BUCKET = "p3.techscrum-${params.Environment}.wenboli.xyz-frontend-${params.Environment}"
     }
@@ -32,15 +32,15 @@ pipeline {
                     sh 'yarn -v'
 
                     // .env file
-                    // if (params.Environment == 'dev'){
-                    //     sh 'cp .env.dev .env'
-                    // } else if (params.Environment == 'uat'){
-                    //     sh 'cp .env.uat .env'
-                    // } else if (params.Environment == 'prod'){
-                    //     sh 'cp .env.prod .env'
-                    // } else {
-                    //     error "Invalid environment: ${params.Environment}."
-                    // }
+                    if (params.Environment == 'dev'){
+                        sh 'cp .env.dev .env'
+                    } else if (params.Environment == 'uat'){
+                        sh 'cp .env.uat .env'
+                    } else if (params.Environment == 'prod'){
+                        sh 'cp .env.prod .env'
+                    } else {
+                        error "Invalid environment: ${params.Environment}."
+                    }
                     sh "cat .env"
 
                     // build
@@ -52,8 +52,9 @@ pipeline {
 
         stage('cd'){
             steps {
-                  withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
-                      // s3Upload(file:'./build', bucket:'p3.techscrum-uat.wenboli.xyz-frontend-uat')
+                script{
+                    withAWS(region:'ap-southeast-2',credentials:'lawrence-jenkins-credential') {
+                     // s3Upload(file:'./build', bucket:'p3.techscrum-uat.wenboli.xyz-frontend-uat')
                       sh 'aws s3 sync ./build s3://${S3_BUCKET}'
                       // Either is OK to upload artifacts to S3 bucket
 
@@ -67,7 +68,8 @@ pipeline {
                       } else {
                           error "Invalid environment: ${params.Environment}."
                       }
-                  }
+                    }
+                }
             }
         }
     }
