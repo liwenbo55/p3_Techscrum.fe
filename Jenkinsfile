@@ -47,11 +47,6 @@ pipeline {
                     sh 'yarn --force'
                     sh 'yarn run build'
                 }
-                // sh 'node -v'
-                // sh 'npm -v'
-                // sh 'npm install --force'
-                // sh 'cp .env.example .env'
-                // sh 'npm run build'
             }
         }
 
